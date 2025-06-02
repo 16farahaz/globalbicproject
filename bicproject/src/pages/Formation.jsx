@@ -57,9 +57,9 @@ const Formation = () => {
           {!status && (
             <Button
               onClick={() => setOpen(true)}
-              label=''
+              label='Ajouter une Formation'
               icon={<IoMdAdd className='text-lg' />}
-              className='flex flex-row-reverse items-center bg-yellow-600 text-white rounded-full py-2 2xl:py-2.5'
+              className='flex flex-row-reverse items-center bg-blue-900 text-white rounded-full py-2 2xl:py-2.5'
             />
           )}
         </div>

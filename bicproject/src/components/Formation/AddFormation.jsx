@@ -28,7 +28,7 @@ const AddFormation = ({ open, setOpen, formation }) => {
   const [type, setType] = useState(formation ? formation.type : "Integré");
   const [mode, setMode] = useState(formation ? formation.mode : "Présentiel");
   const [participantIds, setParticipantIds] = useState(
-    formation?.Users || []
+    formation?.Participants || []
   );
 
   const [hiddendate, setHiddenDate] = useState(false);

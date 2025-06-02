@@ -2,23 +2,28 @@ const { DataTypes } = require('sequelize');
 
 const createTesttechniqueModel = (sequelize) => {
   const Testtechnique = sequelize.define('Testtechnique', {
-    title: { 
-      type: DataTypes.STRING, 
-      allowNull: false 
-    },
-   
-    description: { 
-      type: DataTypes.TEXT, 
-      allowNull: false 
-    },
-    formationId: { 
-      type: DataTypes.INTEGER, 
-      allowNull: false,
-      references: {
-        model: 'Formations', // Assuming you have a Formations model
-        key: 'id'
-      }
-    }, 
+    titre: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      text: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
+
+      formationId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: 'formations', key: 'id' },
+      },
   }, {
     timestamps: true,
    

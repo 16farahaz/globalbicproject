@@ -4,11 +4,11 @@ const createEvaluationModel = (sequelize) => {
   const EvaluationAChaud = sequelize.define(
     "EvaluationAChaud",
     {
-      question1: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 5 } },
-      question2: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 5 } },
-      question3: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 5 } },
-      question4: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 5 } },
-      question5: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 5 } },
+      question1: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 4 } },
+      question2: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 4 } },
+      question3: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 4 } },
+      question4: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 4 } },
+      question5: { type: DataTypes.FLOAT, allowNull: false, validate: { min: 1, max: 4 } },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,

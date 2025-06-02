@@ -26,10 +26,13 @@ const app = express();
     app.use(cookieParser());
     app.use(morgan("dev"));
     
+    const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'middlewares/uploads')));
     // Routes
     app.use('/api', routes);
     app.use(routeNotFound);
     app.use(errorHandler);
+
 
     if (sequelize) {
       try {

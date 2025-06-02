@@ -9,7 +9,7 @@ router.get('/oneformation/:id', evaluationController.getFormationEvaluations);
 //get all evaluations for a specifique user
 router.get('/user/:id', evaluationController.getUserEvaluations);
 //have score of a specific evaluation (awka 7adhrthelk ya maryem )
-router.get('/evaluation/:id', evaluationController.getFormationStats);
+router.get('/evaluation/:id', evaluationController.getFormationScore);
 
 
 

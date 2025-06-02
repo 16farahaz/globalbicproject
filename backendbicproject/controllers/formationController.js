@@ -53,7 +53,7 @@ exports.getAllFormations = async (req, res) => {
     });
 
     const allFormations = Array.from(allFormationsMap.values());
-    console.log("All formations for user:", JSON.stringify(allFormations, null, 2));
+    //console.log("All formations for user:", JSON.stringify(allFormations, null, 2));
 
     return res.status(200).json(allFormations);
   } catch (error) {
@@ -134,7 +134,8 @@ exports.updateFormation = async (req, res) => {
 
     if (participantIds) {
       const users = await User.findAll({ where: { id: participantIds } });
-      await formation.setUsers(users); // Reset participants
+      await formation.setParticipants(users);
+
     }
 
     res.json(formation);

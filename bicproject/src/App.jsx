@@ -18,6 +18,8 @@ import AllFormation from "./pages/AllFormations";
 import Visualisation from "./pages/Visualisation";
 import { useForm } from "react-hook-form";
 import { setOpenSidebar } from "./redux/slices/authSlice";
+import Testtechnique from "./pages/Testtechnique";
+import Projet from "./pages/Projet";
 
 function Layout() {
   const { user } = useSelector((state) => state.auth);
@@ -58,32 +60,36 @@ const MobileSidebar = () => {
       <Transition
         show={isSidebarOpen}
         as={Fragment}
-        enter='transition-opacity duration-700'
-        enterFrom='opacity-x-10'
-        enterTo='opacity-x-100'
-        leave='transition-opacity duration-700'
-        leaveFrom='opacity-x-100'
-        leaveTo='opacity-x-0'
+        enter="transition-opacity duration-700"
+        enterFrom="opacity-x-10"
+        enterTo="opacity-x-100"
+        leave="transition-opacity duration-700"
+        leaveFrom="opacity-x-100"
+        leaveTo="opacity-x-0"
       >
         {(ref) => (
           <div
             ref={(node) => (mobileMenuRef.current = node)}
             className={`md:hidden w-full h-full bg-black/40 transition-transform duration-700 transform
              ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-            onClick={() => closeSidebar()}
+            onClick={() => closeSidebar()} // clic sur overlay ferme sidebar
           >
-            <div className='bg-white w-3/4 h-full'>
-              <div className='w-full flex justify-end px-5 pt-5'>
+            {/* Bloque la propagation du clic pour ne pas fermer le menu si clic dans la sidebar */}
+            <div
+              className="bg-white w-3/4 h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-full flex justify-end px-5 pt-5">
                 <button
                   onClick={() => closeSidebar()}
-                  className='flex justify-end items-end'
+                  className="flex justify-end items-end"
                 >
                   <IoMdClose size={25} />
                 </button>
               </div>
 
-              <div className='-mt-10'>
-                <Sidebare/>
+              <div className="-mt-10">
+                <Sidebare />
               </div>
             </div>
           </div>
@@ -92,6 +98,7 @@ const MobileSidebar = () => {
     </>
   );
 };
+
 
 const App = () => {
   const theme = "light";
@@ -106,7 +113,8 @@ const App = () => {
             <Route path='/evaluationac/:id' element={<Evaluationachaud/>} />
             <Route path='/evaluationaf/:id' element={<EvaluationaFroid/>} />
             <Route path='/allevaluations/:id' element={<AllEvaluations />} />
-            <Route path='/allformation' element={<AllFormation />} />
+            <Route path='/testtechnique' element={<Testtechnique />} />
+            <Route path='projet' element={<Projet/>}/>
             <Route path='/formation' element={<Formation/>} />
             <Route path='/formation/:id' element={<FormationDetails />} />
             <Route path='/users' element={<Users/>} />

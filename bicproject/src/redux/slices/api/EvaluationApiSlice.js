@@ -26,12 +26,26 @@ export const evaluationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Evaluation"],
     }),
+
+     // Fonction pour récupérer le score d'une formation
+    getScoreEvaluation: builder.query({
+      query: (id) => ({
+        url: `${AUTH_URL}/evaluation/${id}`, // Assure-toi que ce endpoint retourne bien les stats
+        method: "GET",
+        credentials: "include",
+      }),
+      providesTags: ["Evaluation"],
+    })
+
+
   })
+
 
 });
 
 export const{
     useAddNewEvaluationMutation,
-    useGetEvaluationListQuery
+    useGetEvaluationListQuery,
+    useGetScoreEvaluationQuery,
 
 }= evaluationApiSlice;

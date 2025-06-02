@@ -1,4 +1,5 @@
-const { getEvaluation, getUser, getFormation } = require('../utils/db');
+const { getEvaluation, getUser, getFormation,getSequelize } = require('../utils/db');
+const { Sequelize } = require('sequelize');
 // Create a new evaluation (A chaud) for a formation
 
 exports.createEvaluation = async (req, res) => {
@@ -141,19 +142,18 @@ exports.getFormationEvaluations = async (req, res) => {
 
 
 // Get statistics for all formations to now the score and participant count for the formation view
+/* 
 
 exports.getFormationStats = async (req, res) => {
   try {
-    const EvaluationAChaud = getEvaluation();
     const Formation = getFormation();
-    const User = getUser();
 
-    // Find all formations with participant count and average evaluation score
     const formations = await Formation.findAll({
       attributes: [
         'id',
         'title',
-        // Count distinct participants (users in FormationParticipants join table)
+
+        // Nombre total de participants uniques (via la table de jointure)
         [
           Sequelize.literal(`(
             SELECT COUNT(DISTINCT "userId")
@@ -162,10 +162,13 @@ exports.getFormationStats = async (req, res) => {
           )`),
           'participantCount'
         ],
-        // Average score across all evaluations linked to the formation
+
+        // Moyenne des 5 questions sur 5 (score moyen par formation)
         [
           Sequelize.literal(`(
-            SELECT AVG(("question1" + "question2" + "question3" + "question4" + "question5") / 5)
+            SELECT ROUND(AVG(
+              ("question1" + "question2" + "question3" + "question4" + "question5") / 5
+            ), 2)
             FROM "evaluation_a_chaud"
             WHERE "evaluation_a_chaud"."formationId" = "Formation"."id"
           )`),
@@ -177,7 +180,82 @@ exports.getFormationStats = async (req, res) => {
 
     res.json(formations);
   } catch (error) {
-    console.error('Error fetching formation stats:', error);
+    console.error('❌ Error fetching formation stats:', error);
     res.status(500).json({ error: error.message });
   }
 };
+ */
+
+
+exports.getFormationScore = async (req, res) => {
+  try {
+    const Formation = getFormation();
+    const EvaluationAChaud = getEvaluation();
+    const sequelize = getSequelize();
+
+    const formationId = req.params.id;
+
+    // Vérifier que la formation existe
+    const formation = await Formation.findByPk(formationId);
+    if (!formation) {
+      return res.status(404).json({ message: "Formation not found" });
+    }
+
+    // Compter le nombre de participants via la table de liaison FormationParticipants
+    const participantCountResult = await sequelize.query(
+      `SELECT COUNT(*) FROM "FormationParticipants" WHERE "formationId" = :formationId`,
+      {
+        replacements: { formationId },
+        type: Sequelize.QueryTypes.SELECT,
+      }
+    );
+    const participantCount = parseInt(participantCountResult[0].count, 10);
+
+    // Récupérer toutes les évaluations pour cette formation
+    const evaluations = await EvaluationAChaud.findAll({
+      where: { formationId },
+    });
+
+    if (evaluations.length === 0) {
+      return res.status(200).json({
+        formationId,
+        participantCount,
+        totalScore: 0,
+        averageScore: 0,
+        percentScore: "0%",
+        message: "Aucune évaluation trouvée pour cette formation."
+      });
+    }
+
+    let totalScore = 0;
+
+    evaluations.forEach((eval) => {
+      const scoreParticipant =
+        eval.question1 +
+        eval.question2 +
+        eval.question3 +
+        eval.question4 +
+        eval.question5;
+
+      totalScore += scoreParticipant;
+    });
+
+    // Moyenne sur le nombre réel de participants (inscrits)
+    const averageScore = participantCount > 0 ? totalScore / participantCount : 0;
+    const maxScorePerParticipant = 5 * 4; // 5 questions, max 5 par question = 25 max score
+    const percentScore = averageScore / maxScorePerParticipant * 100;
+
+    res.json({
+      formationId,
+      participantCount,
+      totalScore,
+      averageScore,
+      percentScore: percentScore.toFixed(2) + "%",
+    });
+
+  } catch (error) {
+    console.error("Erreur lors du calcul du score de la formation :", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+ 

@@ -13,6 +13,8 @@ import { BiMessageAltDetail } from "react-icons/bi";
 import { FaList, FaStar } from "react-icons/fa";
 import logo from "../../assets/bic7.jpg";
 import UserInfo from "../UserInfo";
+import { useGetScoreEvaluationQuery } from "../../redux/slices/api/EvaluationApiSlice";
+import ScoreCard from "../Evaluationachaud/scoreCard";
 
 
 
@@ -34,8 +36,21 @@ const ICONS = {
 const FormationCard = ({formation}) => {
     const {user} = useSelector((state)=>state.auth);
     const [open,setOpen] = useState(false);
+    const { data, isLoading, error, refetch } = useGetScoreEvaluationQuery(formation?.id);
+     console.log("Score de la formation :", data);
+     const getStarsValue = () => {
+    if (!data || !data.percentScore) return 0;
+    const percent = parseFloat(data.percentScore);
+    return (percent / 100) * 4; //ya3ni pourcentage bin 0 et 100
+  };
+ //hya data jetna haka : 
+ /* averageScore: 7.5
+formationId: "12"
+participantCount: 2
+percentScore: "37.50%"
+totalScore: 15
 
- 
+  */
     
   return (
     <>
@@ -63,9 +78,10 @@ const FormationCard = ({formation}) => {
                 
                 <div className="flex items-center justify-between mb-2 ">
                     <div className="flex items-center gap-3">
-                        <div className="flex gap-1 items-center text text-sm text-gray-600">
-                        < FaStar/>
-                        <span>lol</span>
+                        <div className="flex gap-3 items-center text text-sm text-gray-600">
+                     
+                        <span><ScoreCard  value={getStarsValue()}/></span>
+                        <span className="text-base">{data?.averageScore}</span>
 
                         </div>
                         
