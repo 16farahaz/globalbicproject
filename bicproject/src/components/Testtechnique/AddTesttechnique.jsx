@@ -28,8 +28,9 @@ const AddTesttechnique = ({ open, setOpen, test }) => {
   const formations = data || [];
 
   const [selectedFormation, setSelectedFormation] = useState(
-    test ? test.Formation.id : ""
+    test ? test?.Formation?.id : ""
   );
+  
 
   const form = useForm();
 
@@ -40,7 +41,7 @@ const AddTesttechnique = ({ open, setOpen, test }) => {
         titre: test.titre || "",
         text: test.text || "",
       });
-      setSelectedFormation(test.Formation.id);
+      setSelectedFormation(test?.Formation?.id);
     }
   }, [test, form]);
 
@@ -109,21 +110,25 @@ const AddTesttechnique = ({ open, setOpen, test }) => {
             label="Titre"
             name="titre"
             className="w-full rounded-xl"
-            register={form.register("titre", { required: "Titre est requise" })}
+            register={form.register("titre", { required: "Titre est requise" ,pattern: {
+                  value: /^[A-Za-zÀ-ÿ\s]+$/,
+                  message: "Seules les lettres et les espaces sont autorisés.",
+                },})}
             error={form.formState.errors.titre?.message}
           />
 
           <div className="w-full flex flex-col mt-4">
             <textarea
               className="w-full h-full rounded-xl border p-2"
-              {...form.register("text", { required: "Contenu est requis" })}
+              {...form.register("text", {
+                required: "Contenu est requis",
+                maxLength: {
+                  value: 1000,
+                  message: "Le contenu ne doit pas dépasser 1000 caractères",
+                },
+              })}
               placeholder="Saisissez le contenu du test"
             />
-            {form.formState.errors.text && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.text.message}
-              </p>
-            )}
           </div>
 
           <div className="flex flex-row-reverse gap-4">

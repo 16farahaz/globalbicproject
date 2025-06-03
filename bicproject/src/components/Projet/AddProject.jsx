@@ -118,7 +118,13 @@ const AddProject = ({ open, setOpen, projet }) => {
             label="Titre"
             name="titre"
             className="w-full rounded-xl"
-            register={register("titre", { required: "Titre est requise" })}
+            register={register("titre", {
+                required: "Titre est requis!",
+                pattern: {
+                  value: /^[A-Za-zÀ-ÿ\s]+$/,
+                  message: "Seules les lettres et les espaces sont autorisés.",
+                },
+              })}
             error={errors.titre?.message}
           />
 

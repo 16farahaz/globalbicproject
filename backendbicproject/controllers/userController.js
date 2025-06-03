@@ -257,7 +257,8 @@ exports.changeUserPassword = async (req, res) => {
     }
 
     const { userId } = req.user;
-    const { newPassword } = req.body;
+    const { motdepasse } = req.body;
+    console.log("new password",motdepasse);
 
     const user = await User.findByPk(userId);
     if (!user) {
@@ -265,7 +266,7 @@ exports.changeUserPassword = async (req, res) => {
     }
 
     // Update password - this will trigger the beforeSave hook for hashing
-    user.motdepasse = newPassword;
+    user.motdepasse = motdepasse;
     await user.save();
 
     // Remove password before sending response

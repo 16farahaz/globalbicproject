@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Textbox from '../components/Textbox';
 import Button from '../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLoginMutation } from '../redux/slices/api/AuthApiSlice';
+import { useLoginMutation } from '../redux/slices/api/authApiSlice';
 import { toast } from "sonner";
 import { setCredentials } from '../redux/slices/authSlice';
 import Loader from '../components/Loader';
@@ -34,8 +34,8 @@ const Login = () => {
       dispatch(setCredentials(res));
       navigate("/");
     } catch (error) {
-      console.error("API Error:", error);
-      toast.error("Something went wrong");
+      console.error("API Error:", error?.data?.message);
+      toast.error(error?.data?.message);
     }
   };
 

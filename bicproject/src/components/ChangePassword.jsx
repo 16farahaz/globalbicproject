@@ -18,20 +18,22 @@ const ChangePassword = ({ open, setOpen }) => {
   const [changeUserPassword, { isLoading }] = useChangePasswordMutation();
 
   const handleOnSubmit = async (data) => {
-    if (data.password !== data.cpass) {
-      toast.warning("Passwords doesn't match");
+    console.log(data)
+    if (data.motdepasse !== data.cmotdepasse) {
+      console.log(data.motdepasse,data.cmotdepasse);
+      toast.warning("Les deux mots de passe ne sont pas identiques");
       return;
     }
     try {
       const res = await changeUserPassword(data).unwrap();
-      toast.success("New User added successfully");
+      toast.success("Mot de passe modifié avec succès");
 
       setTimeout(() => {
         setOpen(false);
       }, 1500);
     } catch (err) {
       console.log(err);
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || err.error || "Erreur inconnue");
     }
   };
 
@@ -43,30 +45,30 @@ const ChangePassword = ({ open, setOpen }) => {
             as='h2'
             className='text-base font-bold leading-6 pb-2 text-gray-700 mb-4'
           >
-            Change Passowrd and keep your account safe 
+            Changez votre mot de passe pour sécuriser votre compte 
           </Dialog.Title>
           <div className='mt-2 flex flex-col gap-6 '>
             <Textbox
-              placeholder='New Passowrd'
+              placeholder='Nouveau mot de passe'
               type='password'
-              name='password'
-              label='New Passowrd'
+              name='mot de passe'
+              label='Nouveau mot de passe'
               className='w-full rounded-xl'
-              register={register("password", {
-                required: "New Passowrd is required!",
+              register={register("motdepasse", {
+                required: "Veuillez saisir un nouveau mot de passe !!",
               })}
-              error={errors.password ? errors.password.message : ""}
+              error={errors.motdepasse ? errors.motdepasse.message : ""}
             />
             <Textbox
               placeholder='Confirm New Passowrd'
               type='password'
-              name='cpass'
-              label='Confirm New Passowrd'
+              name='cmotdepasse'
+              label='Confirmer le mot de passe'
               className='w-full rounded-xl'
-              register={register("cpass", {
-                required: "Confirm New Passowrd is required!",
+              register={register("cmotdepasse", {
+                required: "Veuillez confirmer le nouveau mot de passe",
               })}
-              error={errors.cpass ? errors.cpass.message : ""}
+              error={errors.cmotdepasse ? errors.cmotdepasse.message : ""}
             />
           </div>
 
@@ -79,7 +81,7 @@ const ChangePassword = ({ open, setOpen }) => {
               <Button
                 type='submit'
                 className='bg-blue-900 px-8 text-sm font-semibold rounded-xl text-white hover:bg-blue-700  sm:w-auto'
-                label='Save'
+                label='Enregistrer'
               />
 
               <button
@@ -87,7 +89,7 @@ const ChangePassword = ({ open, setOpen }) => {
                 className='bg-gray-600 px-6 ml-1 text-sm font-semibold text-white sm:w-auto rounded-xl hover:bg-gray-200'
                 onClick={() => setOpen(false)}
               >
-                Cancel
+                Annuler
               </button>
             </div>
           )}

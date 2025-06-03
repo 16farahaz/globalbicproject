@@ -135,6 +135,10 @@ const AddUser = ({ open, setOpen, userData }) => {
               className="w-full rounded-xl"
               register={register("name", {
                 required: "Nom et prénom est requis!",
+                pattern: {
+                  value: /^[A-Za-zÀ-ÿ\s]+$/,
+                  message: "Seules les lettres et les espaces sont autorisés.",
+                },
               })}
               error={errors.name ? errors.name.message : ""}
             />
@@ -181,15 +185,17 @@ const AddUser = ({ open, setOpen, userData }) => {
               error={errors.phone ? errors.phone.message : ""}
             />
 
-            <SelectList
-              label="Role"
-              lists={LISTS}
-              selected={role}
-              setSelected={(value) => {
-                setRole(value);
-                console.log("Role selected:", value); // Debug log for role selection
-              }}
-            />
+            {(user.isAdmin || user.role === "Responsable RH") && (
+              <SelectList
+                label="Role"
+                lists={LISTS}
+                selected={role}
+                setSelected={(value) => {
+                  setRole(value);
+                  console.log("Role selected:", value);
+                }}
+              />
+            )}
 
             <Textbox
               placeholder="ex: 7021, rue de la République"

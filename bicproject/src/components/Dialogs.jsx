@@ -82,7 +82,7 @@ export function UserAction({ open, setOpen, onClick = () => {} }) {
           </Dialog.Title>
 
           <p className='text-center text-gray-500'>
-            {"Are you sure you want to activate or deactive this account?"}
+            {"Voulez-vous vraiment activer ou desactiver ce compte ?"}
           </p>
 
           <div className='bg-gray-50 py-3 sm:flex sm:flex-row-reverse gap-4'>
@@ -93,14 +93,14 @@ export function UserAction({ open, setOpen, onClick = () => {} }) {
                 "bg-red-600 hover:bg-red-500"
               )}
               onClick={onClick}
-              label={"Yes"}
+              label={"Oui"}
             />
 
             <Button
               type='button'
               className='bg-white px-8 text-sm font-semibold text-gray-900 sm:w-auto border'
               onClick={() => closeDialog()}
-              label='No'
+              label='Non'
             />
           </div>
         </div>

@@ -6,7 +6,8 @@ const Formation = getFormation();
 /// ✅ Ajouter un nouveau projet
 exports.addProjet = async (req, res) => {
   try {
-    const Projet = getProjet(); // Your model
+    const Projet = getProjet();
+    const Formation = getFormation();
 
     const { titre, userId, formationId } = req.body;
 
@@ -18,15 +19,33 @@ exports.addProjet = async (req, res) => {
       return res.status(400).json({ error: "File is required" });
     }
 
-    // Check if project with same userId and formationId exists
-    const existingProjet = await Projet.findOne({ userId, formationId });
-
-    if (existingProjet) {
-      return res.status(409).json({ error: "Déja exist",message:"Déja existe" });
+    // Validate required fields
+    if (!titre || !userId || !formationId) {
+      return res.status(400).json({ error: "titre, userId and formationId are required" });
     }
 
-    // Create new project if no duplicate found
-    const newProjet = await Projet.create({ titre, file, userId, formationId });
+    // Ensure userId and formationId are integers
+    if (isNaN(parseInt(userId)) || isNaN(parseInt(formationId))) {
+      return res.status(400).json({ error: "userId and formationId must be integers" });
+    }
+
+    // Check if a project with the same titre, userId and formationId already exists
+    const existingProjet = await Projet.findOne({
+      where: { titre, userId: parseInt(userId), formationId: parseInt(formationId) }
+    });
+
+    if (existingProjet) {
+      return res.status(409).json({ error: "Projet déjà existant avec ce titre, user et formation" });
+    }
+
+    // Create new project
+    const newProjet = await Projet.create({
+      titre,
+      file,
+      userId: parseInt(userId),
+      formationId: parseInt(formationId)
+    });
+
     console.log("New project created:", newProjet);
 
     res.status(201).json(newProjet);

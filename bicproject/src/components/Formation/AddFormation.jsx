@@ -53,48 +53,50 @@ const AddFormation = ({ open, setOpen, formation }) => {
   const [addNew, { isLoading }] = useAddNewFormationMutation();
   const [update, { isLoading: isUpdating }] = useUpdateFormationMutation();
 
- const onSubmit = async (data) => {
-  try {
-    // Transform participantIds to IDs only
-    const idsOnly = participantIds.map(p => (typeof p === 'object' ? p.id : p));
+  const onSubmit = async (data) => {
+    try {
+      // Transform participantIds to IDs only
+      const idsOnly = participantIds.map((p) =>
+        typeof p === "object" ? p.id : p
+      );
 
-    if (formation) {
-      const updatedData = {
-        userId: id || formation.userId,
-        title: data.title || formation.title,
-        mode: mode || formation.mode,
-        type: type || formation.type,
-        time: data.time || formation.time,
-        duree: data.duree || formation.duree,
-        participantIds: idsOnly || formation.participantIds,
-        lieu: data.lieu || formation.lieu,
-      };
+      if (formation) {
+        const updatedData = {
+          userId: id || formation.userId,
+          title: data.title || formation.title,
+          mode: mode || formation.mode,
+          type: type || formation.type,
+          time: data.time || formation.time,
+          duree: data.duree || formation.duree,
+          participantIds: idsOnly || formation.participantIds,
+          lieu: data.lieu || formation.lieu,
+        };
 
-      await update({ updatedData, id: formation?.id }).unwrap();
-      toast.success("Formation mise à jour avec succès");
-    } else {
-      const newformationData = {
-        userId: id,
-        title: data.title,
-        mode: mode,
-        type: type,
-        time: data.time,
-        duree: data.duree,
-        participantIds: idsOnly,
-        lieu: data.lieu,
-      };
-      await addNew(newformationData).unwrap();
-      toast.success("Nouvelle formation ajoutée avec succès");
+        await update({ updatedData, id: formation?.id }).unwrap();
+        toast.success("Formation mise à jour avec succès");
+      } else {
+        const newformationData = {
+          userId: id,
+          title: data.title,
+          mode: mode,
+          type: type,
+          time: data.time,
+          duree: data.duree,
+          participantIds: idsOnly,
+          lieu: data.lieu,
+        };
+        await addNew(newformationData).unwrap();
+        toast.success("Nouvelle formation ajoutée avec succès");
+      }
+
+      setTimeout(() => setOpen(false), 1500);
+    } catch (error) {
+      console.error("API Error:", error);
+      const message =
+        error?.data?.message || error.message || "Une erreur est survenue";
+      toast.error(message);
     }
-
-    setTimeout(() => setOpen(false), 1500);
-  } catch (error) {
-    console.error("API Error:", error);
-    const message =
-      error?.data?.message || error.message || "Une erreur est survenue";
-    toast.error(message);
-  }
-};
+  };
 
   /* 
   //useEffect(() => {
@@ -109,14 +111,20 @@ const AddFormation = ({ open, setOpen, formation }) => {
           {isLoading || isUpdating ? <Loading /> : null}
         </Dialog.Title>
 
-        <div className=" flex flex-col gap-4">
+        <div className=" flex flex-col gap-1">
           <Textbox
             placeholder="Saisissez le titre de la formation"
             type="text"
             label="Titre"
             name="title"
             className="w-full rounded-xl"
-            register={register("title", { required: "Titre est requise" })}
+            register={register("title", {
+              required: "Titre est requise",
+              pattern: {
+                value: /^[A-Za-zÀ-ÿ\s]+$/,
+                message: "Seules les lettres et les espaces sont autorisés.",
+              },
+            })}
             error={errors.title?.message}
           />
 
@@ -165,7 +173,7 @@ const AddFormation = ({ open, setOpen, formation }) => {
             error={errors.lieu?.message}
           />
 
-          <div className=" flex flex-row-reverse gap-4">
+          <div className=" flex flex-row-reverse gap-4 pt-2">
             <Button
               label="Submit"
               type="submit"

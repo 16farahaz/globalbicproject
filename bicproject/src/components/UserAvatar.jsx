@@ -60,7 +60,7 @@ const UserAvatar = () => {
           leaveTo="transform opacity-0 scale-95"
         >
             <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right
-             divide-gray-100 rounded-md bg-white shadow-2xl  ring-black/5 focus:outilne-none ">
+              divide-gray-100 rounded-md bg-white shadow-2xl ring-black/5 focus:outline-none z-[9999] ">
                <div className='p-4'>
                 <Menu.Item >
                     {({active})=>(

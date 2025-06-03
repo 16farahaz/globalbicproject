@@ -97,6 +97,10 @@ exports.createFormation = async (req, res) => {
         .status(400)
         .json({ message: "Formation with this title already exists" });
     }
+    // Vérifier que les participants sont fournis
+    if (!participantIds || !Array.isArray(participantIds) || participantIds.length === 0) {
+      return res.status(400).json({ error: 'Une formation doit avoir au moins un participant.' });
+    }
 
     const newFormation = await Formation.create({
       mode,
@@ -110,7 +114,7 @@ exports.createFormation = async (req, res) => {
 
     if (participantIds && participantIds.length > 0) {
       const users = await User.findAll({ where: { id: participantIds } });
-      await newFormation.addUsers(users); // Many-to-many association
+      await newFormation.addParticipants(users); // Many-to-many association
     }
 
     res.status(201).json(newFormation);
@@ -129,6 +133,11 @@ exports.updateFormation = async (req, res) => {
     const formation = await Formation.findByPk(req.params.id);
     if (!formation)
       return res.status(404).json({ message: "Formation not found" });
+     
+    // Vérifier que les participants sont fournis
+    if (!participantIds || !Array.isArray(participantIds) || participantIds.length === 0) {
+      return res.status(400).json({ error: 'Une formation doit avoir au moins un participant.',message:"Une formation doit avoir au moins un participant." });
+    }
 
     await formation.update({ mode, title, lieu, type, time, duree });
 
@@ -157,7 +166,7 @@ exports.deleteFormation = async (req, res) => {
     }
 
     // Supprimer les relations participants
-    await formation.setUsers([]);
+    await formation.setParticipants([]);
 
     // Supprimer les évaluations liées
     await EvaluationAChaud.destroy({ where: { formationId: formation.id } });
@@ -169,6 +178,6 @@ exports.deleteFormation = async (req, res) => {
 
   } catch (error) {
     console.error("Error deleting formation:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message ,message:error.message});
   }
 };
