@@ -49,7 +49,7 @@ const Login = () => {
         <div className='h-full w-full lg:w-2/3 flex flex-col items-center justify-center'>
           <div className='w-full md:max-w-lg 2xl:max-w-3xl flex flex-col items-center justify-center gap-5 md:gap-y-10 2xl:-mt-20'>
             <span className='flex gap-1 py-1 px-3'>
-              <img src={logo} alt="logo" className="w-40 h-17 " />
+              <img src={logo} alt="logo" className="w-60 h-20 " />
             </span>
             <span className='flex gap-1 py-1 px-3  text-2xl  text-yellow-500 '>Gérez toutes vos tâches en un seul endroit !</span>
 

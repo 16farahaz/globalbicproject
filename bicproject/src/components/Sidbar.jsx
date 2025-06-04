@@ -24,7 +24,7 @@ import logo from '../assets/bic7.jpg';
 
 const linkData = [
   {
-    label: "Dashboard",
+    label: "Accueil",
     link: "dashboard",
     icon: <MdDashboard />,
   },
@@ -42,7 +42,7 @@ const linkData = [
   },
   */
   {
-    label: "Visualisation",
+    label: "Dashboard",
     link: "visualisation",
     icon: <FcStatistics />,
   },
